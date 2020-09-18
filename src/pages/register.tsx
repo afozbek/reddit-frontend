@@ -5,30 +5,16 @@ import { Box, Button } from "@chakra-ui/core";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "./../components/InputField";
 import { useMutation, useQuery } from "urql";
+import { useRegisterMutation } from "../generated/graphql";
 
 interface Props {}
 
-const REGISTER_MUTATION = `
-mutation Register($username: String!, $password: String!) {
-  register(options: { username: $username, password: $password }) {
-    errors {
-      field
-      message
-    }
-    user {
-      id
-      username
-    }
-  }
-}
-`;
-
 const Register: React.FC<Props> = (props) => {
-  const [, registerMutation] = useMutation(REGISTER_MUTATION);
+  const [, registerMutation] = useRegisterMutation();
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     console.log(values);
-    registerMutation(values);
+    const response = await registerMutation(values);
   };
 
   return (
