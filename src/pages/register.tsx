@@ -4,7 +4,6 @@ import { Form, Formik } from "formik";
 import { Box, Button } from "@chakra-ui/core";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "./../components/InputField";
-import { useMutation, useQuery } from "urql";
 import { useRegisterMutation } from "../generated/graphql";
 
 interface Props {}
