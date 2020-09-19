@@ -5,15 +5,19 @@ import { Box, Button } from "@chakra-ui/core";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "./../components/InputField";
 import { useRegisterMutation } from "../generated/graphql";
+import { toErrorMap } from "../utils/toErrorMap";
 
 interface Props {}
 
 const Register: React.FC<Props> = (props) => {
   const [, registerMutation] = useRegisterMutation();
 
-  const handleSubmit = async (values) => {
-    console.log(values);
+  const handleSubmit = async (values: any, { setErrors }: any) => {
     const response = await registerMutation(values);
+
+    if (response.data?.register.errors) {
+      setErrors(toErrorMap(response.data.register.errors));
+    }
   };
 
   return (
