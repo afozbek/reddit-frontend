@@ -1,0 +1,4 @@
+fragment SharedUser on User {
+  id
+  username
+}
