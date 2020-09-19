@@ -49,7 +49,6 @@ const Login: React.FC<{}> = (props) => {
 
             <Button
               mt={4}
-              variantColor="teal"
               // isLoading={isSubmitting}
               type="submit"
               cursor="pointer"
