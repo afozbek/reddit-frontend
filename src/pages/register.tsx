@@ -6,17 +6,23 @@ import { Wrapper } from "../components/Wrapper";
 import { InputField } from "./../components/InputField";
 import { useRegisterMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
+import { useRouter } from "next/router";
 
 interface Props {}
 
 const Register: React.FC<Props> = (props) => {
   const [, registerMutation] = useRegisterMutation();
+  const router = useRouter();
 
   const handleSubmit = async (values: any, { setErrors }: any) => {
     const response = await registerMutation(values);
 
     if (response.data?.register.errors) {
       setErrors(toErrorMap(response.data.register.errors));
+    } else if (response.data?.register.user) {
+      // worked
+      console.log(response.data?.register.user);
+      router.push("/");
     }
   };
 
@@ -50,7 +56,7 @@ const Register: React.FC<Props> = (props) => {
               type="submit"
               cursor="pointer"
             >
-              Submit
+              Register
             </Button>
           </Form>
         )}
