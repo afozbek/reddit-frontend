@@ -17,9 +17,9 @@ const Login: React.FC<{}> = (props) => {
   const handleSubmit = async (values: any, { setErrors }: any) => {
     const response = await loginMutation({ options: values });
 
-    if (response.data?.login?.errors) {
+    if (response.data?.login.errors) {
       setErrors(toErrorMap(response.data?.login.errors));
-    } else if (response.data?.login?.user) {
+    } else if (response.data?.login.user) {
       // worked
       console.log(response.data?.login.user);
       router.push("/");

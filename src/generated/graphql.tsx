@@ -56,7 +56,7 @@ export type Mutation = {
   deletePost: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   register: UserResponse;
-  login?: Maybe<UserResponse>;
+  login: UserResponse;
   logout: Scalars['Boolean'];
 };
 
@@ -120,7 +120,7 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = (
   { __typename?: 'Mutation' }
-  & { login?: Maybe<(
+  & { login: (
     { __typename?: 'UserResponse' }
     & { errors?: Maybe<Array<(
       { __typename?: 'FieldError' }
@@ -129,7 +129,7 @@ export type LoginMutation = (
       { __typename?: 'User' }
       & SharedUserFragment
     )> }
-  )> }
+  ) }
 );
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
