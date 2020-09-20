@@ -43,8 +43,10 @@ export const NavBar: React.FC<NavBarProps> = () => {
   }
 
   return (
-    <Flex bg="tan" p={6}>
-      <Box ml={"auto"}>{body}</Box>
-    </Flex>
+    <nav>
+      <Flex bg="tan" p={6}>
+        <Box ml={"auto"}>{body}</Box>
+      </Flex>
+    </nav>
   );
 };
