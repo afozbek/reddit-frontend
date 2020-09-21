@@ -1,15 +1,44 @@
-import { Box, Button } from "@chakra-ui/core";
+import { Box, Button, Link } from "@chakra-ui/core";
 import { Formik, Form } from "formik";
 import { NextPage } from "next";
-import React from "react";
+import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
 import { Wrapper } from "../../components/Wrapper";
+import { useChangePasswordMutation } from "./../../generated/graphql";
+
+import { useRouter } from "next/router";
+import { toErrorMap } from "../../utils/toErrorMap";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "./../../utils/createUrqlClient";
+
+import NextLink from "next/link";
 
 const ChangePassword: NextPage<{ passwordToken: string }> = ({
   passwordToken,
 }) => {
-  const handleSubmit = async (newPassword: any, { setErrors }: any) => {
-    console.log(newPassword);
+  const router = useRouter();
+  const [, changePassword] = useChangePasswordMutation();
+  const [tokenError, setTokenError] = useState("");
+
+  const handleSubmit = async (values: any, { setErrors }: any) => {
+    const response = await changePassword({
+      newPassword: values.newPassword,
+      passwordToken,
+    });
+
+    if (response.data?.changePassword.errors) {
+      const errorMap = toErrorMap(response.data.changePassword.errors);
+      if (errorMap["token"]) {
+        // handle 'token' field error
+        setTokenError(errorMap["token"]);
+      }
+
+      setErrors(errorMap);
+    } else if (response.data?.changePassword.user) {
+      // worked
+      console.log(response.data?.changePassword.user);
+      router.push("/");
+    }
   };
 
   return (
@@ -23,6 +52,13 @@ const ChangePassword: NextPage<{ passwordToken: string }> = ({
               label="New Password"
               type="password"
             />
+
+            <Box>
+              <Box color="#f00">{tokenError}</Box>
+              <NextLink href="/forgot-password">
+                <Link>Go forget it againg</Link>
+              </NextLink>
+            </Box>
 
             <Button
               mt={4}
@@ -46,4 +82,4 @@ ChangePassword.getInitialProps = ({ query }) => {
   };
 };
 
-export default ChangePassword;
+export default withUrqlClient(createUrqlClient, { ssr: false })(ChangePassword);
