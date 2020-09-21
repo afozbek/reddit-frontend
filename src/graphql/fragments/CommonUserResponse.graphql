@@ -1,0 +1,8 @@
+fragment CommonUserResponse on UserResponse {
+  errors {
+    ...RegularError
+  }
+  user {
+    ...SharedUser
+  }
+}
