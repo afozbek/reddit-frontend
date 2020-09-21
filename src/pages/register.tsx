@@ -17,7 +17,7 @@ const Register: React.FC<Props> = (props) => {
   const router = useRouter();
 
   const handleSubmit = async (values: any, { setErrors }: any) => {
-    const response = await registerMutation(values);
+    const response = await registerMutation({ options: values });
 
     if (response.data?.register.errors) {
       setErrors(toErrorMap(response.data.register.errors));
@@ -31,16 +31,25 @@ const Register: React.FC<Props> = (props) => {
   return (
     <Wrapper variant="small">
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ username: "", email: "", password: "" }}
         onSubmit={handleSubmit}
       >
-        {({ values, handleChange, isSubmitting }) => (
+        {({ isSubmitting }) => (
           <Form>
             <InputField
               placeholder="Username"
               name="username"
               label="Username"
             />
+
+            <Box mt="20px">
+              <InputField
+                placeholder="Email"
+                name="email"
+                label="Email"
+                type="email"
+              />
+            </Box>
 
             <Box mt="20px">
               <InputField
@@ -54,7 +63,7 @@ const Register: React.FC<Props> = (props) => {
             <Button
               mt={4}
               variantColor="teal"
-              // isLoading={isSubmitting}
+              isLoading={isSubmitting}
               type="submit"
               cursor="pointer"
             >

@@ -15,7 +15,7 @@ const Login: React.FC<{}> = (props) => {
   const router = useRouter();
 
   const handleSubmit = async (values: any, { setErrors }: any) => {
-    const response = await loginMutation({ options: values });
+    const response = await loginMutation(values);
 
     if (response.data?.login.errors) {
       setErrors(toErrorMap(response.data?.login.errors));
@@ -29,15 +29,15 @@ const Login: React.FC<{}> = (props) => {
   return (
     <Wrapper variant="small">
       <Formik
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ usernameOrEmail: "", password: "" }}
         onSubmit={handleSubmit}
       >
-        {({ values, handleChange, isSubmitting }) => (
+        {({ isSubmitting }) => (
           <Form>
             <InputField
-              placeholder="Username"
-              name="username"
-              label="Username"
+              placeholder="Please enter your username or email"
+              name="usernameOrEmail"
+              label="Username/Email"
             />
 
             <Box mt="20px">
@@ -52,7 +52,7 @@ const Login: React.FC<{}> = (props) => {
             <Button
               mt={4}
               variantColor="teal"
-              // isLoading={isSubmitting}
+              isLoading={isSubmitting}
               type="submit"
               cursor="pointer"
             >
