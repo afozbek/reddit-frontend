@@ -63,6 +63,7 @@ const Register: React.FC<Props> = (props) => {
             <Button
               mt={4}
               variantColor="teal"
+              width="100%"
               isLoading={isSubmitting}
               type="submit"
               cursor="pointer"
