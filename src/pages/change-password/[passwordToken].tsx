@@ -13,13 +13,15 @@ import { createUrqlClient } from "./../../utils/createUrqlClient";
 
 import NextLink from "next/link";
 
-const ChangePassword: NextPage<{ passwordToken: string }> = ({
-  passwordToken,
-}) => {
+const ChangePassword: NextPage<{ passwordToken: string }> = () => {
   const router = useRouter();
   const [, changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState("");
 
+  const passwordToken =
+    typeof router.query.passwordToken === "string"
+      ? router.query.passwordToken
+      : "";
   const handleSubmit = async (values: any, { setErrors }: any) => {
     const response = await changePassword({
       newPassword: values.newPassword,
@@ -81,10 +83,4 @@ const ChangePassword: NextPage<{ passwordToken: string }> = ({
   );
 };
 
-ChangePassword.getInitialProps = ({ query }) => {
-  return {
-    passwordToken: query.passwordToken as string,
-  };
-};
-
-export default withUrqlClient(createUrqlClient, { ssr: false })(ChangePassword);
+export default withUrqlClient(createUrqlClient)(ChangePassword);
