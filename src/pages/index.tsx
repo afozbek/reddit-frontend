@@ -40,13 +40,13 @@ const Index = () => {
           <Spinner size="xl" />
         ) : (
           <Stack spacing={8}>
-            {data?.posts.map((p) => (
+            {data?.posts.posts?.map((p) => (
               <Feature key={p.id} title={p.title} desc={p.textSnippet} />
             ))}
           </Stack>
         )}
 
-        {data && (
+        {data && data.posts.hasMore && (
           <Button
             mt={8}
             width="100%"
@@ -54,7 +54,8 @@ const Index = () => {
             onClick={() => {
               setVariables({
                 limit: variables.limit,
-                cursor: data.posts[data.posts.length - 1].createdAt,
+                cursor:
+                  data?.posts.posts[data.posts.posts.length - 1].createdAt,
               });
             }}
           >
