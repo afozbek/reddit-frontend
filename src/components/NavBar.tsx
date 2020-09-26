@@ -3,6 +3,7 @@ import { Box, Button, Flex, Link } from "@chakra-ui/core";
 import NextLink from "next/link";
 import { useMeQuery, useLogoutMutation } from "../generated/graphql";
 import { isServer } from "./../utils/isServer";
+import { FiLogOut } from "react-icons/fi";
 
 interface NavBarProps {}
 
@@ -32,9 +33,16 @@ export const NavBar: React.FC<NavBarProps> = () => {
   } else {
     body = (
       <Box>
-        <Flex>
-          <Box mr={2}>Hello {data.me.username}</Box>
-          <Button variant="link" onClick={() => logout()}>
+        <Flex alignItems="center">
+          <Box mr={3} color="#11563f">
+            Hello<strong> {data.me.username}</strong>
+          </Box>
+          <Button
+            leftIcon={FiLogOut}
+            onClick={() => logout()}
+            variantColor="teal"
+            variant="solid"
+          >
             Log Out
           </Button>
         </Flex>
@@ -44,7 +52,7 @@ export const NavBar: React.FC<NavBarProps> = () => {
 
   return (
     <nav>
-      <Flex bg="tan" p={6}>
+      <Flex bg="#d4f5f3" p={5} boxShadow="0 4px 6px -1px rgba(0,0,0,0.1)">
         <Box ml={"auto"}>{body}</Box>
       </Flex>
     </nav>
