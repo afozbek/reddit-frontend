@@ -13,17 +13,25 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
   >("not-loading");
   const [, vote] = useVoteMutation();
 
-  const handleVoting = async (e: any) => {
+  const handleVoting = async (voteType: "upvote" | "downvote") => {
     let value = 1;
     let loadingType: "upvote-loading" | "downvote-loading" | "not-loading" =
       "not-loading";
-
-    switch (e.target.dataset.voteType) {
+    switch (voteType) {
       case "upvote":
+        if (post.voteStatus === 1) {
+          return;
+        }
+
         value = 1;
         loadingType = "upvote-loading";
+
         break;
       case "downvote":
+        if (post.voteStatus === -1) {
+          return;
+        }
+
         value = -1;
         loadingType = "downvote-loading";
         break;
@@ -50,9 +58,10 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
           <Flex flexDirection="column" alignItems="center">
             <IconButton
               data-vote-type="upvote"
-              onClick={handleVoting}
+              onClick={() => handleVoting("upvote")}
               icon="chevron-up"
               size="lg"
+              variantColor={post.voteStatus === 1 ? "teal" : undefined}
               aria-label="Vote Up"
               isLoading={votingLoading === "upvote-loading"}
             />
@@ -61,9 +70,10 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
             </Text>
             <IconButton
               data-vote-type="downvote"
-              onClick={handleVoting}
+              onClick={() => handleVoting("downvote")}
               icon="chevron-down"
               size="lg"
+              variantColor={post.voteStatus === -1 ? "red" : undefined}
               aria-label="Vote Down"
               isLoading={votingLoading === "downvote-loading"}
             />
