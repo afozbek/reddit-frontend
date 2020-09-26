@@ -9,6 +9,11 @@ query Posts($limit: Int!, $cursor: String) {
       createdAt
       updatedAt
       points
+      creator {
+        id
+        username
+        email
+      }
     }
   }
 }

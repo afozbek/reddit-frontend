@@ -48,6 +48,7 @@ export type Post = {
   __typename?: 'Post';
   id: Scalars['Float'];
   creatorId: Scalars['Float'];
+  creator: User;
   /** Title of the post */
   title: Scalars['String'];
   text: Scalars['String'];
@@ -69,19 +70,26 @@ export type User = {
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
+  vote: Scalars['Boolean'];
   updatePost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
+  login: UserResponse;
+  register: UserResponse;
+  logout: Scalars['Boolean'];
   changePassword: UserResponse;
   forgotPassword: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
-  register: UserResponse;
-  login: UserResponse;
-  logout: Scalars['Boolean'];
 };
 
 
 export type MutationCreatePostArgs = {
   input: PostInput;
+};
+
+
+export type MutationVoteArgs = {
+  value: Scalars['Int'];
+  postId: Scalars['Int'];
 };
 
 
@@ -93,6 +101,17 @@ export type MutationUpdatePostArgs = {
 
 export type MutationDeletePostArgs = {
   id: Scalars['Float'];
+};
+
+
+export type MutationLoginArgs = {
+  password: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
+};
+
+
+export type MutationRegisterArgs = {
+  options: UserInput;
 };
 
 
@@ -109,17 +128,6 @@ export type MutationForgotPasswordArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['Float'];
-};
-
-
-export type MutationRegisterArgs = {
-  options: UserInput;
-};
-
-
-export type MutationLoginArgs = {
-  password: Scalars['String'];
-  usernameOrEmail: Scalars['String'];
 };
 
 export type PostInput = {
@@ -263,6 +271,10 @@ export type PostsQuery = (
     & { posts: Array<(
       { __typename?: 'Post' }
       & Pick<Post, 'id' | 'title' | 'textSnippet' | 'creatorId' | 'createdAt' | 'updatedAt' | 'points'>
+      & { creator: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username' | 'email'>
+      ) }
     )> }
   ) }
 );
@@ -381,6 +393,11 @@ export const PostsDocument = gql`
       createdAt
       updatedAt
       points
+      creator {
+        id
+        username
+        email
+      }
     }
   }
 }
