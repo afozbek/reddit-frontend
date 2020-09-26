@@ -1,23 +1,12 @@
 import { Box, Flex, Heading, Icon, IconButton, Text } from "@chakra-ui/core";
 import React from "react";
-import { Post, User } from "../generated/graphql";
+import { PostSnippetFragment } from "../generated/graphql";
 
-interface FeatureProps {
-  post: Pick<
-    Post,
-    | "id"
-    | "title"
-    | "textSnippet"
-    | "creatorId"
-    | "createdAt"
-    | "updatedAt"
-    | "points"
-  > & {
-    creator: Pick<User, "id" | "username" | "email">;
-  };
+interface PostProps {
+  post: PostSnippetFragment;
 }
 
-export const Feature: React.FC<FeatureProps> = ({ post, ...rest }) => {
+const Post: React.FC<PostProps> = ({ post, ...rest }) => {
   return (
     <Box p={5} shadow="md" borderWidth="1px" {...rest}>
       <Flex>
@@ -43,3 +32,5 @@ export const Feature: React.FC<FeatureProps> = ({ post, ...rest }) => {
     </Box>
   );
 };
+
+export default Post;
