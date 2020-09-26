@@ -112,11 +112,11 @@ export const createUrqlClient = (ssrExchange: any) => ({
               result,
               (res, query) => {
                 if (res.register.user) {
-                  return query;
-                } else {
                   return {
                     me: res.register.user,
                   };
+                } else {
+                  return query;
                 }
               }
             );
@@ -128,6 +128,14 @@ export const createUrqlClient = (ssrExchange: any) => ({
               result,
               () => ({ me: null })
             );
+          },
+          createPost: (result, args, cache, info) => {
+            cache
+              .inspectFields("Query") //FieldInfo[]
+              .filter((f) => f.fieldName === "posts")
+              .forEach((fieldInfo) => {
+                cache.invalidate("Query", "posts", fieldInfo.arguments || {});
+              });
           },
         },
       },
