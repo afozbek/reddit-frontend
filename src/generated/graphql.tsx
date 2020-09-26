@@ -164,6 +164,15 @@ export type CommonUserResponseFragment = (
   )> }
 );
 
+export type PostSnippetFragment = (
+  { __typename?: 'Post' }
+  & Pick<Post, 'id' | 'title' | 'textSnippet' | 'creatorId' | 'createdAt' | 'updatedAt' | 'points'>
+  & { creator: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username' | 'email'>
+  ) }
+);
+
 export type RegularErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
@@ -270,11 +279,7 @@ export type PostsQuery = (
     & Pick<PaginatedPosts, 'hasMore'>
     & { posts: Array<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'title' | 'textSnippet' | 'creatorId' | 'createdAt' | 'updatedAt' | 'points'>
-      & { creator: (
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'username' | 'email'>
-      ) }
+      & PostSnippetFragment
     )> }
   ) }
 );
@@ -303,6 +308,22 @@ export const CommonUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${SharedUserFragmentDoc}`;
+export const PostSnippetFragmentDoc = gql`
+    fragment PostSnippet on Post {
+  id
+  title
+  textSnippet
+  creatorId
+  createdAt
+  updatedAt
+  points
+  creator {
+    id
+    username
+    email
+  }
+}
+    `;
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($newPassword: String!, $passwordToken: String!) {
   changePassword(newPassword: $newPassword, passwordToken: $passwordToken) {
@@ -386,22 +407,11 @@ export const PostsDocument = gql`
   posts(limit: $limit, cursor: $cursor) {
     hasMore
     posts {
-      id
-      title
-      textSnippet
-      creatorId
-      createdAt
-      updatedAt
-      points
-      creator {
-        id
-        username
-        email
-      }
+      ...PostSnippet
     }
   }
 }
-    `;
+    ${PostSnippetFragmentDoc}`;
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
