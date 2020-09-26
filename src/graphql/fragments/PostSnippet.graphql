@@ -1,6 +1,7 @@
 fragment PostSnippet on Post {
   id
   title
+  voteStatus
   textSnippet
   creatorId
   createdAt
