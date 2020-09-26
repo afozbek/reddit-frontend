@@ -5,7 +5,8 @@ import Layout from "./../components/Layout";
 import React, { useState } from "react";
 import { Box, Button, Flex, Select, Spinner, Stack } from "@chakra-ui/core";
 import { useRouter } from "next/router";
-import { Feature } from "../components/Feature";
+import Post from "../components/Post";
+import { PostActions } from "../components/PostActions";
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -20,59 +21,41 @@ const Index = () => {
     return <div>Haven't got any data yet 🤨</div>;
   }
 
+  const body =
+    !data && fetching ? (
+      <Spinner size="xl" />
+    ) : (
+      <Stack spacing={8}>
+        {data?.posts.posts?.map((p) => (
+          <Post post={p} key={p.id} />
+        ))}
+      </Stack>
+    );
+
+  const loadMore = data && data.posts.hasMore && (
+    <Button
+      mt={8}
+      width="100%"
+      isLoading={fetching}
+      onClick={() => {
+        setVariables({
+          limit: variables.limit,
+          cursor: data?.posts.posts[data.posts.posts.length - 1].createdAt,
+        });
+      }}
+    >
+      Load More
+    </Button>
+  );
+
   return (
     <Layout>
       <Box paddingBottom="100px">
-        <Flex margin="auto" alignItems="center" a>
-          <Button
-            variantColor="teal"
-            width="60%"
-            onClick={() => router.push("/create-post")}
-            cursor="pointer"
-          >
-            Create Post
-          </Button>
+        <PostActions />
 
-          <Select
-            variant="outline"
-            placeholder="Filter: "
-            cursor="pointer"
-            width="30%"
-            marginLeft="auto"
-          >
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-          </Select>
-        </Flex>
+        {body}
 
-        <br />
-        {!data && fetching ? (
-          <Spinner size="xl" />
-        ) : (
-          <Stack spacing={8}>
-            {data?.posts.posts?.map((p) => (
-              <Feature post={p} key={p.id} />
-            ))}
-          </Stack>
-        )}
-
-        {data && data.posts.hasMore && (
-          <Button
-            mt={8}
-            width="100%"
-            isLoading={fetching}
-            onClick={() => {
-              setVariables({
-                limit: variables.limit,
-                cursor:
-                  data?.posts.posts[data.posts.posts.length - 1].createdAt,
-              });
-            }}
-          >
-            Load More
-          </Button>
-        )}
+        {loadMore}
       </Box>
     </Layout>
   );
