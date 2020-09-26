@@ -25,7 +25,6 @@ const CreatePost: React.FC<{}> = () => {
   const [, createPost] = useCreatePostMutation();
 
   const handleSubmit = async (values: PostInput) => {
-    console.log(values);
     const { error } = await createPost({ input: values });
     if (!error) {
       // No error :)
