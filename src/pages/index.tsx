@@ -3,13 +3,13 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { usePostsQuery } from "../generated/graphql";
 import Layout from "./../components/Layout";
 import React, { useState } from "react";
-import { Box, Button, Spinner, Stack } from "@chakra-ui/core";
+import { Box, Button, Flex, Select, Spinner, Stack } from "@chakra-ui/core";
 import { useRouter } from "next/router";
 import { Feature } from "../components/Feature";
 
 const Index = () => {
   const [variables, setVariables] = useState({
-    limit: 10,
+    limit: 5,
     cursor: null as null | string,
   });
 
@@ -23,17 +23,28 @@ const Index = () => {
   return (
     <Layout>
       <Box paddingBottom="100px">
-        <Box margin="auto" width="50%">
+        <Flex margin="auto" alignItems="center" a>
           <Button
-            mt={4}
-            width="100%"
             variantColor="teal"
+            width="60%"
             onClick={() => router.push("/create-post")}
             cursor="pointer"
           >
             Create Post
           </Button>
-        </Box>
+
+          <Select
+            variant="outline"
+            placeholder="Filter: "
+            cursor="pointer"
+            width="30%"
+            marginLeft="auto"
+          >
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+          </Select>
+        </Flex>
 
         <br />
         {!data && fetching ? (
@@ -41,7 +52,7 @@ const Index = () => {
         ) : (
           <Stack spacing={8}>
             {data?.posts.posts?.map((p) => (
-              <Feature key={p.id} title={p.title} desc={p.textSnippet} />
+              <Feature post={p} key={p.id} />
             ))}
           </Stack>
         )}
