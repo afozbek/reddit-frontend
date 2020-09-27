@@ -1,7 +1,8 @@
-import { Box, Flex, Heading, Icon, IconButton, Text } from "@chakra-ui/core";
+import { Box, Flex, Heading, IconButton, Text, Link } from "@chakra-ui/core";
 import React, { useState } from "react";
 import { PostSnippetFragment } from "../generated/graphql";
 import { useVoteMutation } from "./../generated/graphql";
+import NextLink from "next/link";
 
 interface PostProps {
   post: PostSnippetFragment;
@@ -68,6 +69,7 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
             <Text padding="5px 0">
               <strong>{post.points}</strong>
             </Text>
+
             <IconButton
               data-vote-type="downvote"
               onClick={() => handleVoting("downvote")}
@@ -81,7 +83,11 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
         </Box>
         <Box width="100%">
           <Flex alignItems="center">
-            <Heading fontSize="xl">{post.title}</Heading>
+            <NextLink href="/post/[id]" as={`/post/${post.id}`}>
+              <Link>
+                <Heading fontSize="xl">{post.title}</Heading>
+              </Link>
+            </NextLink>
             <Box marginLeft="auto">
               Posted By: <strong>{post.creator.username}</strong>
             </Box>
