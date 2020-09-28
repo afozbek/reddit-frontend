@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Form, Formik } from "formik";
-import { Box, Button, Flex, Link } from "@chakra-ui/core";
+import { Box, Button, Flex, Link, Text } from "@chakra-ui/core";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "./../components/InputField";
 import { useLoginMutation } from "../generated/graphql";
@@ -11,6 +11,7 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
 import NextLink from "next/link";
+import Layout from "./../components/Layout";
 
 const Login: React.FC<{}> = (props) => {
   const [, loginMutation] = useLoginMutation();
@@ -32,49 +33,75 @@ const Login: React.FC<{}> = (props) => {
   };
 
   return (
-    <Wrapper variant="small">
-      <Formik
-        initialValues={{ usernameOrEmail: "", password: "" }}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <InputField
-              placeholder="Please enter your username or email"
-              name="usernameOrEmail"
-              label="Username/Email"
-            />
-
-            <Box mt="20px">
+    <Layout>
+      <Wrapper variant="small">
+        <Formik
+          initialValues={{ usernameOrEmail: "", password: "" }}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form>
               <InputField
-                placeholder="Password"
-                name="password"
-                label="Password"
-                type="password"
+                placeholder="Please enter your username or email"
+                name="usernameOrEmail"
+                label="Username/Email"
               />
-            </Box>
 
-            <Flex mt={2}>
-              <NextLink href="/forgot-password">
-                <Link ml="auto">Forgot Password?</Link>
-              </NextLink>
-            </Flex>
+              <Box mt="20px">
+                <InputField
+                  placeholder="Password"
+                  name="password"
+                  label="Password"
+                  type="password"
+                />
+              </Box>
 
-            <Button
-              mt={4}
-              width="100%"
-              variantColor="teal"
-              isLoading={isSubmitting}
-              type="submit"
-              cursor="pointer"
-            >
-              Login
-            </Button>
-          </Form>
-        )}
-      </Formik>
-    </Wrapper>
+              <Flex mt={2}>
+                <NextLink href="/forgot-password">
+                  <Link ml="auto">Forgot Password?</Link>
+                </NextLink>
+              </Flex>
+
+              <Button
+                mt={4}
+                width="100%"
+                variantColor="teal"
+                isLoading={isSubmitting}
+                type="submit"
+                cursor="pointer"
+              >
+                Login
+              </Button>
+            </Form>
+          )}
+        </Formik>
+
+        <Box>
+          <Flex
+            marginTop={4}
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Box width="44%" height="1px" bg="#ccc"></Box>
+            <Text color="#564b4b">OR</Text>
+            <Box width="44%" height="1px" bg="#ccc"></Box>
+          </Flex>
+        </Box>
+
+        <Box>
+          <Button
+            mt={4}
+            width="100%"
+            variantColor="teal"
+            cursor="pointer"
+            onClick={() => router.push("/register")}
+          >
+            Create New Account
+          </Button>
+        </Box>
+      </Wrapper>
+    </Layout>
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Login);
+export default withUrqlClient(createUrqlClient, { ssr: false })(Login);
