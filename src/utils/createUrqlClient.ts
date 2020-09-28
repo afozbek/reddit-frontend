@@ -14,6 +14,7 @@ import {
   RegisterMutation,
   LogoutMutation,
   VoteMutationVariables,
+  DeletePostMutationVariables,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import Router from "next/router";
@@ -184,6 +185,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 );
               }
             },
+            // deletePost: (_result, args, cache, info) => {
+            //   cache.invalidate({
+            //     __typename: "DeletePost",
+            //     id: (args as DeletePostMutationVariables).postId,
+            //   });
+            // },
           },
         },
       }),

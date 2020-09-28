@@ -26,9 +26,9 @@ const Index = () => {
       <Spinner size="xl" />
     ) : (
       <Stack spacing={8}>
-        {data?.posts.posts?.map((p) => (
-          <Post post={p} key={p.id} />
-        ))}
+        {data?.posts.posts?.map((p) =>
+          !p ? null : <Post post={p} key={p.id} />
+        )}
       </Stack>
     );
 
