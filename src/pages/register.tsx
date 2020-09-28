@@ -9,6 +9,7 @@ import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import Layout from "../components/Layout";
 
 interface Props {}
 
@@ -29,51 +30,53 @@ const Register: React.FC<Props> = (props) => {
   };
 
   return (
-    <Wrapper variant="small">
-      <Formik
-        initialValues={{ username: "", email: "", password: "" }}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <InputField
-              placeholder="Username"
-              name="username"
-              label="Username"
-            />
-
-            <Box mt="20px">
+    <Layout>
+      <Wrapper variant="small">
+        <Formik
+          initialValues={{ username: "", email: "", password: "" }}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form>
               <InputField
-                placeholder="Email"
-                name="email"
-                label="Email"
-                type="email"
+                placeholder="Username"
+                name="username"
+                label="Username"
               />
-            </Box>
 
-            <Box mt="20px">
-              <InputField
-                placeholder="Password"
-                name="password"
-                label="Password"
-                type="password"
-              />
-            </Box>
+              <Box mt="20px">
+                <InputField
+                  placeholder="Email"
+                  name="email"
+                  label="Email"
+                  type="email"
+                />
+              </Box>
 
-            <Button
-              mt={4}
-              variantColor="teal"
-              width="100%"
-              isLoading={isSubmitting}
-              type="submit"
-              cursor="pointer"
-            >
-              Register
-            </Button>
-          </Form>
-        )}
-      </Formik>
-    </Wrapper>
+              <Box mt="20px">
+                <InputField
+                  placeholder="Password"
+                  name="password"
+                  label="Password"
+                  type="password"
+                />
+              </Box>
+
+              <Button
+                mt={4}
+                variantColor="teal"
+                width="100%"
+                isLoading={isSubmitting}
+                type="submit"
+                cursor="pointer"
+              >
+                Register
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </Wrapper>
+    </Layout>
   );
 };
 

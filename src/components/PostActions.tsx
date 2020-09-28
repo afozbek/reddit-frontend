@@ -24,6 +24,7 @@ export const PostActions: React.FC<PostActionsProps> = ({}) => {
         cursor="pointer"
         width="30%"
         marginLeft="auto"
+        focusBorderColor="#319795"
       >
         <option value="option1">Option 1</option>
         <option value="option2">Option 2</option>
