@@ -1,6 +1,10 @@
 import { Box, Flex, Heading, IconButton, Text, Link } from "@chakra-ui/core";
 import React, { useState } from "react";
-import { PostSnippetFragment } from "../generated/graphql";
+import {
+  PostSnippetFragment,
+  useDeletePostMutation,
+  useMeQuery,
+} from "../generated/graphql";
 import { useVoteMutation } from "./../generated/graphql";
 import NextLink from "next/link";
 
@@ -13,6 +17,8 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
     "upvote-loading" | "downvote-loading" | "not-loading"
   >("not-loading");
   const [, vote] = useVoteMutation();
+  const [{ data }] = useMeQuery();
+  const [, deletePost] = useDeletePostMutation();
 
   const handleVoting = async (voteType: "upvote" | "downvote") => {
     let value = 1;
@@ -82,7 +88,7 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
           </Flex>
         </Box>
         <Box width="100%">
-          <Flex alignItems="center">
+          <Flex alignItems="center" mb={2}>
             <NextLink href="/post/[id]" as={`/post/${post.id}`}>
               <Link>
                 <Heading fontSize="xl">{post.title}</Heading>
@@ -92,7 +98,19 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
               Posted By: <strong>{post.creator.username}</strong>
             </Box>
           </Flex>
-          <Text mt={4}>{post.textSnippet}</Text>
+
+          <Flex alignItems="center" justifyContent="space-between">
+            <Text mt={4}>{post.textSnippet}</Text>
+            {post.creatorId === data?.me?.id ? (
+              <IconButton
+                icon="delete"
+                onClick={() => deletePost({ postId: post.id })}
+                size="sm"
+                variantColor="red"
+                aria-label="Delete Post"
+              ></IconButton>
+            ) : null}
+          </Flex>
         </Box>
       </Flex>
     </Box>
