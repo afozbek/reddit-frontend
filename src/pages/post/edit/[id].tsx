@@ -5,7 +5,7 @@ import Layout from "./../../../components/Layout";
 import { Box, Button, Spinner } from "@chakra-ui/core";
 import { Formik, Form } from "formik";
 import { InputField } from "../../../components/InputField";
-import { PostInput } from "../../../generated/graphql";
+import { PostInput, useUpdatePostMutation } from "../../../generated/graphql";
 import { usePostQuery } from "./../../../generated/graphql";
 import { NextRouter, useRouter } from "next/router";
 
@@ -16,15 +16,23 @@ interface UpdatePostProps {
 const UpdatePost: React.FC<UpdatePostProps> = ({ ...props }) => {
   console.log(props);
   const router = useRouter();
+  const postId = router.query.id ? parseInt(router.query.id as string) : -1;
+
   const [{ data, fetching }] = usePostQuery({
     variables: {
-      postId: router.query.id ? parseInt(router.query.id as string) : -1,
+      postId,
     },
   });
 
-  console.log(fetching);
+  const [, updatePost] = useUpdatePostMutation();
 
-  const handleSubmit = (values: PostInput) => {};
+  const handleSubmit = async (values: PostInput) => {
+    const { text, title } = values;
+    const result = await updatePost({ postId, text, title });
+
+    console.log(result.data?.updatePost);
+    router.push("/");
+  };
 
   const C = fetching ? (
     <Spinner size="lg" />
