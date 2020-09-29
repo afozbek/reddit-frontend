@@ -6,78 +6,83 @@ import { Box, Button, Spinner } from "@chakra-ui/core";
 import { Formik, Form } from "formik";
 import { InputField } from "../../../components/InputField";
 import { PostInput, useUpdatePostMutation } from "../../../generated/graphql";
-import { usePostQuery } from "./../../../generated/graphql";
 import { NextRouter, useRouter } from "next/router";
+import { useFetchPost } from "../../../utils/useFetchPost";
 
 interface UpdatePostProps {
   router: NextRouter;
 }
 
 const UpdatePost: React.FC<UpdatePostProps> = ({ ...props }) => {
-  console.log(props);
   const router = useRouter();
-  const postId = router.query.id ? parseInt(router.query.id as string) : -1;
 
-  const [{ data, fetching }] = usePostQuery({
-    variables: {
-      postId,
-    },
-  });
+  const [{ data, fetching, error }] = useFetchPost();
 
   const [, updatePost] = useUpdatePostMutation();
 
   const handleSubmit = async (values: PostInput) => {
     const { text, title } = values;
-    const result = await updatePost({ postId, text, title });
+    const result = await updatePost({
+      postId: data?.post?.id || -1,
+      text,
+      title,
+    });
 
     console.log(result.data?.updatePost);
     router.push("/");
   };
 
-  const C = fetching ? (
-    <Spinner size="lg" />
-  ) : (
-    <Formik
-      initialValues={{
-        title: data?.post?.title || "",
-        text: data?.post?.text || "",
-      }}
-      onSubmit={handleSubmit}
-    >
-      {({ isSubmitting }) => (
-        <Form>
-          <InputField
-            placeholder="Please enter title"
-            name="title"
-            label="Title"
-          />
-
-          <Box mt={4}>
+  let body: any = "";
+  if (fetching) {
+    body = <Spinner />;
+  } else if (!data?.post) {
+    body = <div>Could not find the post</div>;
+  } else if (error) {
+    body = <div>{error.message}</div>;
+  } else {
+    body = (
+      <Formik
+        initialValues={{
+          title: data?.post?.title || "",
+          text: data?.post?.text || "",
+        }}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting }) => (
+          <Form>
             <InputField
-              placeholder="Please enter text"
-              name="text"
-              textArea
-              label="Text"
-              height="300px"
+              placeholder="Please enter title"
+              name="title"
+              label="Title"
             />
-          </Box>
 
-          <Button
-            mt={4}
-            width="100%"
-            variantColor="teal"
-            isLoading={isSubmitting}
-            type="submit"
-            cursor="pointer"
-          >
-            Update Post
-          </Button>
-        </Form>
-      )}
-    </Formik>
-  );
+            <Box mt={4}>
+              <InputField
+                placeholder="Please enter text"
+                name="text"
+                textArea
+                label="Text"
+                height="300px"
+              />
+            </Box>
 
-  return <Layout variant="small">{C}</Layout>;
+            <Button
+              mt={4}
+              width="100%"
+              variantColor="teal"
+              isLoading={isSubmitting}
+              type="submit"
+              cursor="pointer"
+            >
+              Update Post
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    );
+  }
+
+  return <Layout variant="small">{body}</Layout>;
 };
 
 export default withUrqlClient(createUrqlClient)(UpdatePost);

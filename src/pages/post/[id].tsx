@@ -1,23 +1,12 @@
 import { withUrqlClient } from "next-urql";
 import React from "react";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { useRouter } from "next/router";
-import { usePostQuery } from "../../generated/graphql";
 import Layout from "./../../components/Layout";
 import { Box, Heading, Spinner } from "@chakra-ui/core";
+import { useFetchPost } from "./../../utils/useFetchPost";
 
 const Post: React.FC<{}> = () => {
-  const router = useRouter();
-
-  const paramPostId =
-    typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
-
-  const [{ data, fetching, error }] = usePostQuery({
-    pause: paramPostId === -1,
-    variables: {
-      postId: paramPostId,
-    },
-  });
+  const [{ data, fetching, error }] = useFetchPost();
   let body: any = "";
 
   if (fetching) {
