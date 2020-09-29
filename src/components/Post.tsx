@@ -7,6 +7,7 @@ import {
 } from "../generated/graphql";
 import { useVoteMutation } from "./../generated/graphql";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 
 interface PostProps {
   post: PostSnippetFragment;
@@ -19,6 +20,7 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
   const [, vote] = useVoteMutation();
   const [{ data }] = useMeQuery();
   const [, deletePost] = useDeletePostMutation();
+  const router = useRouter();
 
   const handleVoting = async (voteType: "upvote" | "downvote") => {
     let value = 1;
@@ -90,8 +92,10 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
         <Box width="100%">
           <Flex alignItems="center" mb={2}>
             <NextLink href="/post/[id]" as={`/post/${post.id}`}>
-              <Link>
-                <Heading fontSize="xl">{post.title}</Heading>
+              <Link width="75%">
+                <Heading fontSize="xl" width="">
+                  {post.title}
+                </Heading>
               </Link>
             </NextLink>
             <Box marginLeft="auto">
@@ -99,16 +103,29 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
             </Box>
           </Flex>
 
-          <Flex alignItems="center" justifyContent="space-between">
-            <Text mt={4}>{post.textSnippet}</Text>
+          <Flex alignItems="center">
+            <Text mt={4} width="75%">
+              {post.textSnippet}
+            </Text>
             {post.creatorId === data?.me?.id ? (
-              <IconButton
-                icon="delete"
-                onClick={() => deletePost({ postId: post.id })}
-                size="sm"
-                variantColor="red"
-                aria-label="Delete Post"
-              ></IconButton>
+              <Box ml="auto">
+                <IconButton
+                  icon="edit"
+                  mr={4}
+                  onClick={() => router.push(`/post/edit/${post.id}`)}
+                  size="sm"
+                  variantColor="teal"
+                  aria-label="Delete Post"
+                ></IconButton>
+
+                <IconButton
+                  icon="delete"
+                  onClick={() => deletePost({ postId: post.id })}
+                  size="sm"
+                  variantColor="red"
+                  aria-label="Delete Post"
+                ></IconButton>
+              </Box>
             ) : null}
           </Flex>
         </Box>
