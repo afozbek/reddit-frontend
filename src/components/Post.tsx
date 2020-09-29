@@ -7,7 +7,6 @@ import {
 } from "../generated/graphql";
 import { useVoteMutation } from "./../generated/graphql";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 
 interface PostProps {
   post: PostSnippetFragment;
@@ -20,7 +19,6 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
   const [, vote] = useVoteMutation();
   const [{ data }] = useMeQuery();
   const [, deletePost] = useDeletePostMutation();
-  const router = useRouter();
 
   const handleVoting = async (voteType: "upvote" | "downvote") => {
     let value = 1;
@@ -109,14 +107,15 @@ const Post: React.FC<PostProps> = ({ post, ...rest }) => {
             </Text>
             {post.creatorId === data?.me?.id ? (
               <Box ml="auto">
-                <IconButton
-                  icon="edit"
-                  mr={4}
-                  onClick={() => router.push(`/post/edit/${post.id}`)}
-                  size="sm"
-                  variantColor="teal"
-                  aria-label="Delete Post"
-                ></IconButton>
+                <NextLink href="/post/edit/[id]" as={`/post/edit/${post.id}`}>
+                  <IconButton
+                    icon="edit"
+                    mr={4}
+                    size="sm"
+                    variantColor="teal"
+                    aria-label="Delete Post"
+                  ></IconButton>
+                </NextLink>
 
                 <IconButton
                   icon="delete"
