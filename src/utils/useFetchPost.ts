@@ -1,11 +1,8 @@
-import { useRouter } from "next/router";
 import { usePostQuery } from "../generated/graphql";
+import { useGetPostId } from "./useGetPostId";
 
 export const useFetchPost = () => {
-  const router = useRouter();
-
-  const paramPostId =
-    typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
+  const paramPostId = useGetPostId();
 
   return usePostQuery({
     pause: paramPostId === -1,
