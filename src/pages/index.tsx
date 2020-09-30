@@ -4,8 +4,8 @@ import { usePostsQuery } from "../generated/graphql";
 import Layout from "./../components/Layout";
 import React, { useState } from "react";
 import { Box, Button, Spinner, Stack } from "@chakra-ui/core";
-import Post from "../components/Post";
-import { PostActions } from "../components/PostActions";
+import Post from "../components/Post/Post";
+import { GeneralPostActions } from "../components/GeneralPostActions";
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -49,7 +49,7 @@ const Index = () => {
   return (
     <Layout>
       <Box paddingBottom="100px">
-        <PostActions />
+        <GeneralPostActions />
 
         {body}
 
