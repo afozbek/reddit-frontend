@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 interface GeneralPostActions {}
 
-export const GeneralPostActions: React.FC<GeneralPostActions> = ({}) => {
+export const GeneralPostActions: React.FC<GeneralPostActions> = () => {
   const router = useRouter();
 
   return (
