@@ -9,9 +9,7 @@ query Post($postId: Int!) {
     updatedAt
     points
     creator {
-      id
-      username
-      email
+      ...DefaultUserFragment
     }
   }
 }

@@ -8,6 +8,7 @@ import { InputField } from "../../../components/InputField";
 import { PostInput, useUpdatePostMutation } from "../../../generated/graphql";
 import { NextRouter, useRouter } from "next/router";
 import { useFetchPost } from "../../../utils/useFetchPost";
+import { useGetPostId } from "./../../../utils/useGetPostId";
 
 interface UpdatePostProps {
   router: NextRouter;
@@ -15,6 +16,7 @@ interface UpdatePostProps {
 
 const UpdatePost: React.FC<UpdatePostProps> = ({ ...props }) => {
   const router = useRouter();
+  const postId = useGetPostId();
 
   const [{ data, fetching, error }] = useFetchPost();
 
@@ -22,13 +24,12 @@ const UpdatePost: React.FC<UpdatePostProps> = ({ ...props }) => {
 
   const handleSubmit = async (values: PostInput) => {
     const { text, title } = values;
-    const result = await updatePost({
-      postId: data?.post?.id || -1,
+    await updatePost({
+      postId,
       text,
       title,
     });
 
-    console.log(result.data?.updatePost);
     router.push("/");
   };
 

@@ -2,9 +2,9 @@ import { Button, Flex, Select } from "@chakra-ui/core";
 import React from "react";
 import { useRouter } from "next/router";
 
-interface PostActionsProps {}
+interface GeneralPostActions {}
 
-export const PostActions: React.FC<PostActionsProps> = ({}) => {
+export const GeneralPostActions: React.FC<GeneralPostActions> = () => {
   const router = useRouter();
 
   return (

@@ -166,6 +166,11 @@ export type CommonUserResponseFragment = (
   )> }
 );
 
+export type DefaultUserFragmentFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'username' | 'email'>
+);
+
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
   & Pick<Post, 'id' | 'title' | 'voteStatus' | 'textSnippet' | 'creatorId' | 'createdAt' | 'updatedAt' | 'points'>
@@ -316,7 +321,7 @@ export type PostQuery = (
     & Pick<Post, 'id' | 'title' | 'voteStatus' | 'text' | 'creatorId' | 'createdAt' | 'updatedAt' | 'points'>
     & { creator: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'email'>
+      & DefaultUserFragmentFragment
     ) }
   )> }
 );
@@ -363,6 +368,13 @@ export const CommonUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${SharedUserFragmentDoc}`;
+export const DefaultUserFragmentFragmentDoc = gql`
+    fragment DefaultUserFragment on User {
+  id
+  username
+  email
+}
+    `;
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
   id
@@ -502,13 +514,11 @@ export const PostDocument = gql`
     updatedAt
     points
     creator {
-      id
-      username
-      email
+      ...DefaultUserFragment
     }
   }
 }
-    `;
+    ${DefaultUserFragmentFragmentDoc}`;
 
 export function usePostQuery(options: Omit<Urql.UseQueryArgs<PostQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostQuery>({ query: PostDocument, ...options });

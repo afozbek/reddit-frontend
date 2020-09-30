@@ -3,10 +3,9 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { usePostsQuery } from "../generated/graphql";
 import Layout from "./../components/Layout";
 import React, { useState } from "react";
-import { Box, Button, Flex, Select, Spinner, Stack } from "@chakra-ui/core";
-import { useRouter } from "next/router";
-import Post from "../components/Post";
-import { PostActions } from "../components/PostActions";
+import { Box, Button, Spinner, Stack } from "@chakra-ui/core";
+import Post from "../components/Post/Post";
+import { GeneralPostActions } from "../components/GeneralPostActions";
 
 const Index = () => {
   const [variables, setVariables] = useState({
@@ -15,7 +14,6 @@ const Index = () => {
   });
 
   const [{ data, fetching }] = usePostsQuery({ variables });
-  const router = useRouter();
 
   if (!fetching && !data) {
     return <div>Haven't got any data yet 🤨</div>;
@@ -51,7 +49,7 @@ const Index = () => {
   return (
     <Layout>
       <Box paddingBottom="100px">
-        <PostActions />
+        <GeneralPostActions />
 
         {body}
 

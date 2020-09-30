@@ -176,7 +176,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   (data.points as number) + (!data.voteStatus ? 1 : 2) * value;
                 cache.writeFragment(
                   gql`
-                    fragment _ on Post {
+                    fragment __ on Post {
                       points
                       voteStatus
                     }
