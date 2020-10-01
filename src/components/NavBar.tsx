@@ -15,6 +15,12 @@ export const NavBar: React.FC<NavBarProps> = () => {
   const [, logout] = useLogoutMutation();
   const router = useRouter();
 
+  const logoutHandler = async () => {
+    await logout();
+
+    router.reload();
+  };
+
   let body = null;
   // data is loading
   if (fetching) {
@@ -43,7 +49,7 @@ export const NavBar: React.FC<NavBarProps> = () => {
           </Box>
           <Button
             leftIcon={FiLogOut}
-            onClick={() => logout()}
+            onClick={logoutHandler}
             variantColor="teal"
             variant="solid"
           >
