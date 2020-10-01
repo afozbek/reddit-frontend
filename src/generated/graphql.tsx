@@ -218,7 +218,7 @@ export type CreatePostMutation = (
 );
 
 export type DeletePostMutationVariables = Exact<{
-  postId: Scalars['Int'];
+  id: Scalars['Int'];
 }>;
 
 
@@ -420,8 +420,8 @@ export function useCreatePostMutation() {
   return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
 };
 export const DeletePostDocument = gql`
-    mutation DeletePost($postId: Int!) {
-  deletePost(id: $postId)
+    mutation DeletePost($id: Int!) {
+  deletePost(id: $id)
 }
     `;
 
