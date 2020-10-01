@@ -13,10 +13,15 @@ const Index = () => {
     cursor: null as null | string,
   });
 
-  const [{ data, fetching }] = usePostsQuery({ variables });
+  const [{ data, error, fetching }] = usePostsQuery({ variables });
 
   if (!fetching && !data) {
-    return <div>Haven't got any data yet 🤨</div>;
+    return (
+      <Box>
+        Haven't got any data yet 🤨
+        <Box>{error?.message}</Box>
+      </Box>
+    );
   }
 
   const body =
