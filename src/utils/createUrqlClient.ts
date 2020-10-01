@@ -185,12 +185,16 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 );
               }
             },
-            // deletePost: (_result, args, cache, info) => {
-            //   cache.invalidate({
-            //     __typename: "DeletePost",
-            //     id: (args as DeletePostMutationVariables).postId,
-            //   });
-            // },
+            deletePost: (_result, args, cache, info) => {
+              try {
+                cache.invalidate({
+                  __typename: "Post",
+                  id: (args as DeletePostMutationVariables).id,
+                });
+              } catch (err) {
+                console.log(err);
+              }
+            },
           },
         },
       }),
