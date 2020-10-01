@@ -1,4 +1,4 @@
-import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
+import { cacheExchange, Resolver, Cache } from "@urql/exchange-graphcache";
 import {
   dedupExchange,
   fetchExchange,
@@ -76,6 +76,15 @@ export const cursorPagination = (): Resolver => {
   };
 };
 
+const invalidateAllPosts = (cache: Cache) => {
+  cache
+    .inspectFields("Query") //FieldInfo[]
+    .filter((f) => f.fieldName === "posts")
+    .forEach((fieldInfo) => {
+      cache.invalidate("Query", "posts", fieldInfo.arguments || {});
+    });
+};
+
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   let cookie = "";
 
@@ -121,6 +130,8 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   }
                 }
               );
+
+              invalidateAllPosts(cache);
             },
             register: (result, args, cache, info) => {
               betterUpdateQuery<RegisterMutation, MeQuery>(
@@ -147,12 +158,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               );
             },
             createPost: (result, args, cache, info) => {
-              cache
-                .inspectFields("Query") //FieldInfo[]
-                .filter((f) => f.fieldName === "posts")
-                .forEach((fieldInfo) => {
-                  cache.invalidate("Query", "posts", fieldInfo.arguments || {});
-                });
+              invalidateAllPosts(cache);
             },
             vote: (_result, args, cache, info) => {
               const { postId, value } = args as VoteMutationVariables;
