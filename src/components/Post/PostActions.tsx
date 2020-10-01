@@ -29,7 +29,7 @@ export const PostActions: React.FC<PostActionsProps> = ({
 
       <IconButton
         icon="delete"
-        onClick={() => deletePost({ postId })}
+        onClick={() => deletePost({ id: postId })}
         size="sm"
         variantColor="red"
         aria-label="Delete Post"
