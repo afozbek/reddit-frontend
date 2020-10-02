@@ -18,3 +18,6 @@ This app uses some of the new technologies. My main purpose is to learn this tec
 - Next.js
 - TypeGraphQL
 - Chakra
+
+## Production
+- 1.0.0
