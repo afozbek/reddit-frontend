@@ -2,7 +2,6 @@ import { Flex, Link, Heading, Box } from "@chakra-ui/core";
 import React from "react";
 
 import NextLink from "next/link";
-import { User } from "./../../../../reddit-server/src/entities/User";
 import { DefaultUserFragmentFragment } from "../../generated/graphql";
 
 interface PostBodyProps {
