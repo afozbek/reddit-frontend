@@ -4,7 +4,11 @@ import { NextPage } from 'next';
 import React, { useState } from 'react';
 import { InputField } from '../../components/InputField';
 import { Wrapper } from '../../components/Wrapper';
-import { useChangePasswordMutation } from './../../generated/graphql';
+import {
+  MeDocument,
+  MeQuery,
+  useChangePasswordMutation,
+} from './../../generated/graphql';
 
 import { useRouter } from 'next/router';
 import { toErrorMap } from '../../utils/toErrorMap';
@@ -26,6 +30,17 @@ const ChangePassword: NextPage<{ passwordToken: string }> = () => {
       variables: {
         newPassword: values.newPassword,
         passwordToken,
+      },
+      update: (cache, { data }) => {
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            __typename: 'Query',
+            me: data?.changePassword.user,
+          },
+        });
+
+        cache.evict({ fieldName: 'posts:{}' });
       },
     });
 
