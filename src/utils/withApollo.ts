@@ -30,7 +30,7 @@ const createClient = (ctx: NextPageContext) =>
     uri: process.env.NEXT_PUBLIC_API_URL as string,
     cache,
     headers: {
-      cookie: (isServer() ? ctx.req?.headers?.cookie : undefined) || '',
+      cookie: (isServer() ? ctx?.req?.headers?.cookie : undefined) || '',
     },
     credentials: 'include',
   });
