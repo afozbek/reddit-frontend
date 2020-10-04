@@ -4,7 +4,7 @@ import { Form, Formik } from 'formik';
 import { Box, Button, Flex, Link, Text } from '@chakra-ui/core';
 import { Wrapper } from '../components/Wrapper';
 import { InputField } from './../components/InputField';
-import { useLoginMutation } from '../generated/graphql';
+import { MeDocument, MeQuery, useLoginMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import { useRouter } from 'next/router';
 
@@ -17,7 +17,20 @@ const Login: React.FC<{}> = () => {
   const router = useRouter();
 
   const handleSubmit = async (values: any, { setErrors }: any) => {
-    const response = await loginMutation({ variables: values });
+    const response = await loginMutation({
+      variables: values,
+      update: (cache, { data }) => {
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            __typename: 'Query',
+            me: data?.login.user,
+          },
+        });
+
+        cache.evict({ fieldName: 'posts:{}' });
+      },
+    });
 
     if (response.data?.login.errors) {
       setErrors(toErrorMap(response.data?.login.errors));
