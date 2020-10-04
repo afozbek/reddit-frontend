@@ -1,38 +1,41 @@
-import React from "react";
-import { Box, Button, Flex, Heading } from "@chakra-ui/core";
-import NextLink from "next/link";
-import { useMeQuery, useLogoutMutation } from "../generated/graphql";
-import { isServer } from "./../utils/isServer";
-import { FiLogOut, FiLogIn } from "react-icons/fi";
-import { useRouter } from "next/router";
+import React from 'react';
+import { Box, Button, Flex, Heading } from '@chakra-ui/core';
+import NextLink from 'next/link';
+import { useMeQuery, useLogoutMutation } from '../generated/graphql';
+import { isServer } from './../utils/isServer';
+import { FiLogOut, FiLogIn } from 'react-icons/fi';
+import { useRouter } from 'next/router';
+import { useApolloClient } from '@apollo/client';
 
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = () => {
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer(),
+  const { data, loading } = useMeQuery({
+    skip: isServer(),
   });
-  const [, logout] = useLogoutMutation();
+  const [logout] = useLogoutMutation();
   const router = useRouter();
+  const apolloClient = useApolloClient();
 
   const logoutHandler = async () => {
     await logout();
 
-    router.reload();
+    // router.reload();
+    await apolloClient.resetStore();
   };
 
   let body = null;
   // data is loading
-  if (fetching) {
+  if (loading) {
     // user not logged in
   } else if (!data?.me) {
     body = (
       <>
         <Button
           rightIcon={FiLogIn}
-          onClick={() => router.push("/login")}
-          variantColor="teal"
-          variant="solid"
+          onClick={() => router.push('/login')}
+          variantColor='teal'
+          variant='solid'
           mr={4}
         >
           Login
@@ -43,15 +46,15 @@ export const NavBar: React.FC<NavBarProps> = () => {
   } else {
     body = (
       <Box>
-        <Flex alignItems="center">
-          <Box mr={3} color="#11563f">
+        <Flex alignItems='center'>
+          <Box mr={3} color='#11563f'>
             Hello<strong> {data.me.username}</strong>
           </Box>
           <Button
             leftIcon={FiLogOut}
             onClick={logoutHandler}
-            variantColor="teal"
-            variant="solid"
+            variantColor='teal'
+            variant='solid'
           >
             Log Out
           </Button>
@@ -63,20 +66,20 @@ export const NavBar: React.FC<NavBarProps> = () => {
   return (
     <nav>
       <Flex
-        bg="#d4f5f3"
+        bg='#d4f5f3'
         p={5}
-        boxShadow="0 4px 6px -1px rgba(0,0,0,0.1)"
-        justifyContent="center"
+        boxShadow='0 4px 6px -1px rgba(0,0,0,0.1)'
+        justifyContent='center'
       >
-        <Flex maxW="800px" w="100%">
+        <Flex maxW='800px' w='100%'>
           <Box>
-            <NextLink href="/">
-              <Heading color="#087775" cursor="pointer">
+            <NextLink href='/'>
+              <Heading color='#087775' cursor='pointer'>
                 Reddit
               </Heading>
             </NextLink>
           </Box>
-          <Box ml={"auto"}>{body}</Box>
+          <Box ml={'auto'}>{body}</Box>
         </Flex>
       </Flex>
     </nav>

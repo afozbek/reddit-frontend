@@ -9,6 +9,7 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.2.2",
     "@chakra-ui/core": "^0.5.2",
     "@emotion/core": "^10.0.27",
     "@emotion/styled": "^10.0.27",
@@ -18,6 +19,7 @@
     "graphql": "^15.3.0",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^9.1.7",
+    "next-apollo": "^5.0.0",
     "next-urql": "^1.1.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -30,6 +32,7 @@
     "@graphql-codegen/cli": "1.17.8",
     "@graphql-codegen/typescript": "1.17.8",
     "@graphql-codegen/typescript-operations": "1.17.8",
+    "@graphql-codegen/typescript-react-apollo": "^2.0.7",
     "@graphql-codegen/typescript-urql": "^2.0.1",
     "@types/node": "^14.11.1",
     "typescript": "^4.0.2"

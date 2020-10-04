@@ -1,66 +1,70 @@
-import { Box, Button, Spinner } from "@chakra-ui/core";
-import { Formik, Form } from "formik";
-import { withUrqlClient } from "next-urql";
-import React, { useEffect } from "react";
-import { InputField } from "../components/InputField";
+import { Box, Button, Spinner } from '@chakra-ui/core';
+import { Formik, Form } from 'formik';
+import React, { useEffect } from 'react';
+import { InputField } from '../components/InputField';
 import {
   PostInput,
   useCreatePostMutation,
   useMeQuery,
-} from "../generated/graphql";
-import { createUrqlClient } from "../utils/createUrqlClient";
-import { useRouter } from "next/router";
-import Layout from "../components/Layout";
+} from '../generated/graphql';
+import { useRouter } from 'next/router';
+import Layout from '../components/Layout';
+import { withApollo } from '../utils/withApollo';
 
 const CreatePost: React.FC<{}> = () => {
   const router = useRouter();
-  const [{ data, fetching }] = useMeQuery();
+  const { data, loading } = useMeQuery();
 
   useEffect(() => {
-    if (!fetching && !data?.me) {
-      router.replace("/login?next=" + router.pathname);
+    if (!loading && !data?.me) {
+      router.replace('/login?next=' + router.pathname);
     }
-  }, [data, router, fetching]);
+  }, [data, router, loading]);
 
-  const [, createPost] = useCreatePostMutation();
+  const [createPost] = useCreatePostMutation();
 
   const handleSubmit = async (values: PostInput) => {
-    const { error } = await createPost({ input: values });
-    if (!error) {
+    const { errors } = await createPost({
+      variables: { input: values },
+      update: (cache) => {
+        cache.evict({ fieldName: 'posts:{}' });
+      },
+    });
+    if (!errors) {
       // No error :)
-      router.push("/");
+      router.push('/');
     }
   };
 
   let C =
-    fetching || !data?.me ? (
-      <Spinner size="xl" />
+    loading || !data?.me ? (
+      <Spinner size='xl' />
     ) : (
-      <Formik initialValues={{ title: "", text: "" }} onSubmit={handleSubmit}>
+      <Formik initialValues={{ title: '', text: '' }} onSubmit={handleSubmit}>
         {({ isSubmitting }) => (
           <Form>
             <InputField
-              placeholder="Please enter title"
-              name="title"
-              label="Title"
+              placeholder='Please enter title'
+              name='title'
+              label='Title'
             />
 
             <Box mt={4}>
               <InputField
-                placeholder="Please enter text"
-                name="text"
+                placeholder='Please enter text'
+                name='text'
                 textArea
-                label="Text"
+                label='Text'
               />
             </Box>
 
             <Button
               mt={4}
-              width="100%"
-              variantColor="teal"
+              width='100%'
+              variantColor='teal'
               isLoading={isSubmitting}
-              type="submit"
-              cursor="pointer"
+              type='submit'
+              cursor='pointer'
             >
               Create Post
             </Button>
@@ -69,7 +73,7 @@ const CreatePost: React.FC<{}> = () => {
       </Formik>
     );
 
-  return <Layout variant="small">{C}</Layout>;
+  return <Layout variant='small'>{C}</Layout>;
 };
 
-export default withUrqlClient(createUrqlClient)(CreatePost);
+export default withApollo({ ssr: false })(CreatePost);

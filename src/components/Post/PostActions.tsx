@@ -1,7 +1,7 @@
-import { Box, IconButton } from "@chakra-ui/core";
-import React from "react";
-import { useMeQuery, useDeletePostMutation } from "../../generated/graphql";
-import NextLink from "next/link";
+import { Box, IconButton } from '@chakra-ui/core';
+import React from 'react';
+import { useMeQuery, useDeletePostMutation } from '../../generated/graphql';
+import NextLink from 'next/link';
 
 interface PostActionsProps {
   creatorId: number;
@@ -12,27 +12,36 @@ export const PostActions: React.FC<PostActionsProps> = ({
   creatorId,
   postId,
 }) => {
-  const [{ data }] = useMeQuery();
-  const [, deletePost] = useDeletePostMutation();
+  const { data } = useMeQuery();
+  const [deletePost] = useDeletePostMutation();
 
   return creatorId === data?.me?.id ? (
-    <Box ml="auto">
-      <NextLink href="/post/edit/[id]" as={`/post/edit/${postId}`}>
+    <Box ml='auto'>
+      <NextLink href='/post/edit/[id]' as={`/post/edit/${postId}`}>
         <IconButton
-          icon="edit"
+          icon='edit'
           mr={4}
-          size="sm"
-          variantColor="teal"
-          aria-label="Delete Post"
+          size='sm'
+          variantColor='teal'
+          aria-label='Delete Post'
         ></IconButton>
       </NextLink>
 
       <IconButton
-        icon="delete"
-        onClick={() => deletePost({ id: postId })}
-        size="sm"
-        variantColor="red"
-        aria-label="Delete Post"
+        icon='delete'
+        onClick={() =>
+          deletePost({
+            variables: { id: postId },
+            update: (cache) => {
+              cache.evict({
+                id: 'Post:' + postId,
+              });
+            },
+          })
+        }
+        size='sm'
+        variantColor='red'
+        aria-label='Delete Post'
       ></IconButton>
     </Box>
   ) : null;
