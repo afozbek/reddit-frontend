@@ -5,6 +5,7 @@ import { useMeQuery, useLogoutMutation } from '../generated/graphql';
 import { isServer } from './../utils/isServer';
 import { FiLogOut, FiLogIn } from 'react-icons/fi';
 import { useRouter } from 'next/router';
+import { useApolloClient } from '@apollo/client';
 
 interface NavBarProps {}
 
@@ -14,11 +15,13 @@ export const NavBar: React.FC<NavBarProps> = () => {
   });
   const [logout] = useLogoutMutation();
   const router = useRouter();
+  const apolloClient = useApolloClient();
 
   const logoutHandler = async () => {
     await logout();
 
-    router.reload();
+    // router.reload();
+    await apolloClient.resetStore();
   };
 
   let body = null;
