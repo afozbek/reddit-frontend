@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from './../../components/Layout';
 import { Box, Heading, Spinner } from '@chakra-ui/core';
 import { useFetchPost } from './../../utils/useFetchPost';
+import { withApollo } from '../../utils/withApollo';
 
 const Post: React.FC<{}> = () => {
   const { data, loading, error } = useFetchPost();
@@ -25,4 +26,4 @@ const Post: React.FC<{}> = () => {
   return <Layout>{body}</Layout>;
 };
 
-export default Post;
+export default withApollo({ ssr: true })(Post);

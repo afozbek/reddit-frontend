@@ -11,6 +11,7 @@ import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 import Layout from '../components/Layout';
 import { UserInput } from './../../../reddit-server/src/types/UserInput';
+import { withApollo } from '../utils/withApollo';
 
 interface Props {}
 
@@ -80,4 +81,4 @@ const Register: React.FC<Props> = (props) => {
   );
 };
 
-export default Register;
+export default withApollo({ ssr: false })(Register);

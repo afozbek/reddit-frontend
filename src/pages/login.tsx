@@ -7,18 +7,17 @@ import { InputField } from './../components/InputField';
 import { useLoginMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import { useRouter } from 'next/router';
-import { withUrqlClient } from 'next-urql';
-import { createUrqlClient } from '../utils/createUrqlClient';
 
 import NextLink from 'next/link';
 import Layout from './../components/Layout';
+import { withApollo } from '../utils/withApollo';
 
-const Login: React.FC<{}> = (props) => {
+const Login: React.FC<{}> = () => {
   const [loginMutation] = useLoginMutation();
   const router = useRouter();
 
   const handleSubmit = async (values: any, { setErrors }: any) => {
-    const response = await loginMutation(values);
+    const response = await loginMutation({ variables: values });
 
     if (response.data?.login.errors) {
       setErrors(toErrorMap(response.data?.login.errors));
@@ -104,4 +103,4 @@ const Login: React.FC<{}> = (props) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(Login);
+export default withApollo({ ssr: false })(Login);

@@ -1,17 +1,45 @@
 import { usePostsQuery } from '../generated/graphql';
 import Layout from './../components/Layout';
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Button, Spinner, Stack } from '@chakra-ui/core';
 import Post from '../components/Post/Post';
 import { GeneralPostActions } from '../components/GeneralPostActions';
+import { withApollo } from './../utils/withApollo';
 
 const Index = () => {
-  const [variables, setVariables] = useState({
-    limit: 5,
-    cursor: null as null | string,
+  const { data, error, loading, fetchMore, variables } = usePostsQuery({
+    variables: {
+      limit: 5,
+      cursor: null,
+    },
+    notifyOnNetworkStatusChange: true,
   });
 
-  const { data, error, loading } = usePostsQuery({ variables });
+  const loadMoreBtnHandler = async () => {
+    await fetchMore({
+      variables: {
+        limit: variables?.limit,
+        cursor: data?.posts.posts[data.posts.posts.length - 1].createdAt,
+      },
+      // updateQuery: (prevValues, { fetchMoreResult }): PostsQuery => {
+      //   if (!fetchMoreResult) {
+      //     return prevValues as PostsQuery;
+      //   }
+
+      //   return {
+      //     __typename: 'Query',
+      //     posts: {
+      //       __typename: 'PaginatedPosts',
+      //       hasMore: (fetchMoreResult as PostsQuery).posts.hasMore,
+      //       posts: [
+      //         ...(prevValues as PostsQuery).posts.posts,
+      //         ...(fetchMoreResult as PostsQuery).posts.posts,
+      //       ],
+      //     },
+      //   };
+      // },
+    });
+  };
 
   if (!loading && !data) {
     return (
@@ -38,12 +66,7 @@ const Index = () => {
       mt={8}
       width='100%'
       isLoading={loading}
-      onClick={() => {
-        setVariables({
-          limit: variables.limit,
-          cursor: data?.posts.posts[data.posts.posts.length - 1].createdAt,
-        });
-      }}
+      onClick={loadMoreBtnHandler}
     >
       Load More
     </Button>
@@ -62,4 +85,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withApollo({ ssr: true })(Index);

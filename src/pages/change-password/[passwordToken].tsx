@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { toErrorMap } from '../../utils/toErrorMap';
 
 import NextLink from 'next/link';
+import { withApollo } from '../../utils/withApollo';
 
 const ChangePassword: NextPage<{ passwordToken: string }> = () => {
   const router = useRouter();
@@ -83,4 +84,4 @@ const ChangePassword: NextPage<{ passwordToken: string }> = () => {
   );
 };
 
-export default ChangePassword;
+export default withApollo({ ssr: false })(ChangePassword);

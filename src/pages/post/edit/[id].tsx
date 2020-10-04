@@ -7,6 +7,7 @@ import { PostInput, useUpdatePostMutation } from '../../../generated/graphql';
 import { NextRouter, useRouter } from 'next/router';
 import { useFetchPost } from '../../../utils/useFetchPost';
 import { useGetPostId } from './../../../utils/useGetPostId';
+import { withApollo } from '../../../utils/withApollo';
 
 interface UpdatePostProps {
   router: NextRouter;
@@ -86,4 +87,4 @@ const UpdatePost: React.FC<UpdatePostProps> = () => {
   return <Layout variant='small'>{body}</Layout>;
 };
 
-export default UpdatePost;
+export default withApollo({ ssr: false })(UpdatePost);

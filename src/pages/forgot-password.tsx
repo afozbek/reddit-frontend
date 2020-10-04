@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { InputField } from '../components/InputField';
 import { Wrapper } from '../components/Wrapper';
 import { createUrqlClient } from '../utils/createUrqlClient';
+import { withApollo } from '../utils/withApollo';
 import {
   ForgotPasswordMutationVariables,
   useForgotPasswordMutation,
@@ -55,4 +56,4 @@ const ForgotPassword: React.FC<{}> = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(ForgotPassword);
+export default withApollo({ ssr: false })(ForgotPassword);

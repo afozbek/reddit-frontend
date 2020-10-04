@@ -9,6 +9,7 @@ import {
 } from '../generated/graphql';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
+import { withApollo } from '../utils/withApollo';
 
 const CreatePost: React.FC<{}> = () => {
   const router = useRouter();
@@ -70,4 +71,4 @@ const CreatePost: React.FC<{}> = () => {
   return <Layout variant='small'>{C}</Layout>;
 };
 
-export default CreatePost;
+export default withApollo({ ssr: false })(CreatePost);
