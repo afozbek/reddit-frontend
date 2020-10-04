@@ -16,8 +16,19 @@ const Register: React.FC<Props> = (props) => {
   const [registerMutation] = useRegisterMutation();
   const router = useRouter();
 
-  const handleSubmit = async (values: UserInput, { setErrors }: any) => {
-    const response = await registerMutation({ variables: { options: values } });
+  const handleSubmit = async (values: any, { setErrors }: any) => {
+    const response = await registerMutation({
+      variables: { options: values },
+      update: (cache, { data }) => {
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            __typename: 'Query',
+            me: data?.register.user,
+          },
+        });
+      },
+    });
 
     if (response.data?.register.errors) {
       setErrors(toErrorMap(response.data.register.errors));
