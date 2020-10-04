@@ -9,7 +9,7 @@ import { withApollo } from './../utils/withApollo';
 const Index = () => {
   const { data, error, loading, fetchMore, variables } = usePostsQuery({
     variables: {
-      limit: 5,
+      limit: 10,
       cursor: null,
     },
     notifyOnNetworkStatusChange: true,
