@@ -1,15 +1,13 @@
-import { withUrqlClient } from "next-urql";
-import React from "react";
-import { createUrqlClient } from "../../utils/createUrqlClient";
-import Layout from "./../../components/Layout";
-import { Box, Heading, Spinner } from "@chakra-ui/core";
-import { useFetchPost } from "./../../utils/useFetchPost";
+import React from 'react';
+import Layout from './../../components/Layout';
+import { Box, Heading, Spinner } from '@chakra-ui/core';
+import { useFetchPost } from './../../utils/useFetchPost';
 
 const Post: React.FC<{}> = () => {
-  const [{ data, fetching, error }] = useFetchPost();
-  let body: any = "";
+  const { data, loading, error } = useFetchPost();
+  let body: any = '';
 
-  if (fetching) {
+  if (loading) {
     body = <Spinner />;
   } else if (!data?.post) {
     body = <div>Could not find the post</div>;
@@ -27,4 +25,4 @@ const Post: React.FC<{}> = () => {
   return <Layout>{body}</Layout>;
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Post);
+export default Post;
