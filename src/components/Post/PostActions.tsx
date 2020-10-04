@@ -29,7 +29,16 @@ export const PostActions: React.FC<PostActionsProps> = ({
 
       <IconButton
         icon='delete'
-        onClick={() => deletePost({ variables: { id: postId } })}
+        onClick={() =>
+          deletePost({
+            variables: { id: postId },
+            update: (cache) => {
+              cache.evict({
+                id: 'Post:' + postId,
+              });
+            },
+          })
+        }
         size='sm'
         variantColor='red'
         aria-label='Delete Post'
