@@ -24,7 +24,12 @@ const CreatePost: React.FC<{}> = () => {
   const [createPost] = useCreatePostMutation();
 
   const handleSubmit = async (values: PostInput) => {
-    const { errors } = await createPost({ variables: { input: values } });
+    const { errors } = await createPost({
+      variables: { input: values },
+      update: (cache) => {
+        cache.evict({ fieldName: 'posts:{}' });
+      },
+    });
     if (!errors) {
       // No error :)
       router.push('/');
