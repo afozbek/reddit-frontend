@@ -55,6 +55,7 @@ const CreatePost: React.FC<{}> = () => {
                 name='text'
                 textArea
                 label='Text'
+                height='150px'
               />
             </Box>
 
